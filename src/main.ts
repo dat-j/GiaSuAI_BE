@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -14,6 +15,26 @@ async function bootstrap() {
   expressApp.use(require('express').json({ limit: '3mb' }));
 
   app.enableCors();
+
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('GiaSuAI API')
+    .setDescription(
+      'API giải bài tập tự động bằng AI (text/ảnh) cho ứng dụng GiaSuAI.',
+    )
+    .setVersion('1.0.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        description:
+          'Firebase ID token (gửi qua header Authorization: Bearer <token>)',
+      },
+      'firebase-auth',
+    )
+    .build();
+  const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('docs', app, swaggerDocument);
 
   const port = process.env.PORT ?? 8080;
   await app.listen(port, '0.0.0.0');
