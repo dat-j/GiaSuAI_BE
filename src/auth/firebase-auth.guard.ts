@@ -1,5 +1,7 @@
 import {
-  CanActivate, ExecutionContext, Injectable,
+  CanActivate,
+  ExecutionContext,
+  Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import * as admin from 'firebase-admin';
